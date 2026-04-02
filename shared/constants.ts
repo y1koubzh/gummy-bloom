@@ -20,9 +20,9 @@ export const DEFAULT_FLAVORS = [
 
 export const DEFAULT_PACKAGING = [
   { id: 1, name: 'Small (30 gummies)', quantity: 30, priceModifier: 0 },
-  { id: 2, name: 'Medium (60 gummies)', quantity: 60, priceModifier: 500 },
-  { id: 3, name: 'Large (120 gummies)', quantity: 120, priceModifier: 1200 },
-  { id: 4, name: 'Family Pack (180 gummies)', quantity: 180, priceModifier: 1800 },
+  { id: 2, name: 'Medium (60 gummies)', quantity: 60, priceModifier: 50000 },
+  { id: 3, name: 'Large (120 gummies)', quantity: 120, priceModifier: 120000 },
+  { id: 4, name: 'Family Pack (180 gummies)', quantity: 180, priceModifier: 180000 },
 ] as const;
 
 export const INGREDIENT_CATEGORIES = [
@@ -35,10 +35,10 @@ export const INGREDIENT_CATEGORIES = [
 ] as const;
 
 // ============ PRICING ============
-export const BASE_GUMMY_PRICE = 1999; // $19.99 in cents
-export const TAX_RATE = 0.08; // 8%
-export const SHIPPING_COST = 500; // $5.00 in cents
-export const FREE_SHIPPING_THRESHOLD = 5000; // $50.00 in cents
+export const BASE_GUMMY_PRICE = 150000; // 1500 دج
+export const TAX_RATE = 0; // إيقاف الضريبة مؤقتاً أو حسب السوق المحلي
+export const SHIPPING_COST = 40000; // 400 دج للتوصيل
+export const FREE_SHIPPING_THRESHOLD = 500000; // شحن مجاني فوق 5000 دج
 
 // ============ SUBSCRIPTION FREQUENCIES ============
 export const SUBSCRIPTION_FREQUENCIES = [

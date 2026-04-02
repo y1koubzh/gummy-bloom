@@ -37,10 +37,10 @@ const MOCK_PRODUCTS = [
     id: 1, 
     name: "Focus Spark", 
     slug: "focus-spark", 
-    description: "Our Focus Spark gummies are carefully formulated with nootropics and vitamins to help you stay sharp and productive throughout the day. Perfect for long work sessions or intense study periods.",
+    description: "أقراص 'فوكوس سبارك' مصممة بعناية لمساعدتك على التركيز وزيادة الإنتاجية طوال اليوم. مثالية لفترات العمل الطويلة أو المذاكرة المكثفة.",
     categoryId: 1, 
-    price: 2999, 
-    discountPrice: 2499,
+    price: 180000, // 1800 دج
+    discountPrice: 150000, // 1500 دج
     image: null, 
     color: "#fbbf24", 
     flavor: "Zesty Lemon",
@@ -57,9 +57,9 @@ const MOCK_PRODUCTS = [
     id: 2, 
     name: "Deep Sleep Melts", 
     slug: "deep-sleep-melts", 
-    description: "Enjoy a restful night's sleep with our natural berry-flavored melts. Formulated with melatonin and chamomile to help you drift off effortlessly.",
+    description: "استمتع بليلة نوم هادئة مع الأقراص المنحلة بنكهة التوت الطبيعي. مركبة من الميلاتونين والبابونج لمساعدتك على النوم بسهولة.",
     categoryId: 2, 
-    price: 3499, 
+    price: 250000, // 2500 دج
     discountPrice: null,
     image: null, 
     color: "#6366f1", 
@@ -77,10 +77,10 @@ const MOCK_PRODUCTS = [
     id: 3, 
     name: "Glow Bloom", 
     slug: "glow-bloom", 
-    description: "Target your skin from within. Our Glow Bloom gummies contain premium collagen and biotin for vibrant skin and healthy hair.",
+    description: "استهدفي بشرتك من الداخل. العلكات تحتوي على كولاجين وبيوتين ممتاز لبشرة نابضة بالحياة وشعر صحي.",
     categoryId: 4, 
-    price: 3999, 
-    discountPrice: 3499,
+    price: 450000, // 4500 دج
+    discountPrice: 380000, // 3800 دج
     image: null, 
     color: "#ec4899", 
     flavor: "Sweet Strawberry",

@@ -24,18 +24,18 @@ export default function Builder() {
 
   const dosageOptions = [
     { id: 1, label: 'Standard (1x daily)', priceModifier: 0 },
-    { id: 2, label: 'Double (2x daily)', priceModifier: 500 },
-    { id: 3, label: 'Triple (3x daily)', priceModifier: 1000 },
+    { id: 2, label: 'Double (2x daily)', priceModifier: 50000 },
+    { id: 3, label: 'Triple (3x daily)', priceModifier: 100000 },
   ];
 
   // Sample ingredients (would come from API in production)
   const ingredients = [
     { id: 1, name: 'Vitamin C', category: 'vitamin', priceModifier: 0 },
-    { id: 2, name: 'Vitamin D', category: 'vitamin', priceModifier: 200 },
-    { id: 3, name: 'Zinc', category: 'mineral', priceModifier: 150 },
-    { id: 4, name: 'Magnesium', category: 'mineral', priceModifier: 150 },
-    { id: 5, name: 'Turmeric', category: 'herbal', priceModifier: 300 },
-    { id: 6, name: 'Ginger', category: 'herbal', priceModifier: 250 },
+    { id: 2, name: 'Vitamin D', category: 'vitamin', priceModifier: 20000 },
+    { id: 3, name: 'Zinc', category: 'mineral', priceModifier: 15000 },
+    { id: 4, name: 'Magnesium', category: 'mineral', priceModifier: 15000 },
+    { id: 5, name: 'Turmeric', category: 'herbal', priceModifier: 30000 },
+    { id: 6, name: 'Ginger', category: 'herbal', priceModifier: 25000 },
   ];
 
   // Calculate price

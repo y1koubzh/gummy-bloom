@@ -1,8 +1,9 @@
-// ============ FORMATTING ============
-export function formatCurrency(cents: number, locale = 'en-US'): string {
+export function formatCurrency(cents: number, locale = 'ar-DZ'): string {
+  // للجزائر، سنستخدم العملة دج (DZD)
   return new Intl.NumberFormat(locale, {
     style: 'currency',
-    currency: 'USD',
+    currency: 'DZD',
+    minimumFractionDigits: 0, // الدينار غالباً لا يستخدم الكسور في التعاملات اليومية
   }).format(cents / 100);
 }
 
