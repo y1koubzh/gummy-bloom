@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Send, MessageCircle, X } from 'lucide-react';
+import { PromptInputBox } from '@/components/ui/ai-prompt-box';
 
 interface Message {
   id: string;
@@ -109,26 +110,43 @@ export default function AIChatbot() {
       </div>
 
       {/* Input */}
-      <div className="border-t border-border p-4 rounded-b-2xl">
-        <div className="flex gap-2">
-          <input
-            type="text"
-            placeholder="Ask me anything..."
-            value={inputValue}
-            onChange={(e) => setInputValue(e.target.value)}
-            onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-            className="flex-1 px-3 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary text-sm"
-          />
-          <Button
-            onClick={handleSendMessage}
-            disabled={!inputValue.trim() || isLoading}
-            size="sm"
-            className="bg-primary hover:bg-primary/90"
-          >
-            <Send size={16} />
-          </Button>
-        </div>
+      <div className="border-t border-border p-3 rounded-b-2xl bg-card">
+        <PromptInputBox 
+          onSend={(message) => {
+             setInputValue(message);
+             handleSendMessageInternal(message);
+          }}
+          isLoading={isLoading}
+          placeholder="Ask me anything..."
+          className="shadow-none border-none bg-muted/30"
+        />
       </div>
     </div>
   );
+
+  async function handleSendMessageInternal(text: string) {
+    if (!text.trim()) return;
+
+    const userMessage: Message = {
+      id: Date.now().toString(),
+      text: text,
+      sender: 'user',
+      timestamp: new Date(),
+    };
+
+    setMessages(prev => [...prev, userMessage]);
+    setIsLoading(true);
+
+    // Simulate AI response
+    setTimeout(() => {
+      const botMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'Based on your interest in energy support, I recommend our Energy Boost Formula with Vitamin B12, Ginseng, and Rhodiola. Would you like to create a custom blend?',
+        sender: 'bot',
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, botMessage]);
+      setIsLoading(false);
+    }, 1000);
+  }
 }

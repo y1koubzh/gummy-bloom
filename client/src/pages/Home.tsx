@@ -3,6 +3,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Sparkles, Zap, Heart, Brain } from 'lucide-react';
 import { ROUTES } from '@shared/constants';
+import { CinematicHero } from '@/components/ui/cinematic-landing-hero';
 
 export default function Home() {
   const [, navigate] = useLocation();
@@ -32,49 +33,9 @@ export default function Home() {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden py-20 md:py-32">
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-600/10 via-pink-600/10 to-blue-600/10" />
-        <div className="container relative z-10">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h1 className="text-5xl md:text-6xl font-bold leading-tight">
-                Your <span className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 bg-clip-text text-transparent">
-                  Perfect Gummies
-                </span>, Personalized
-              </h1>
-              <p className="text-xl text-muted-foreground">
-                Create custom vitamin and supplement gummies tailored to your unique health goals. Choose your flavors, ingredients, and dosages.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  onClick={() => navigate(ROUTES.BUILDER)}
-                  className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-6 px-8 rounded-lg text-lg flex items-center justify-center gap-2"
-                >
-                  Start Building
-                  <ArrowRight size={20} />
-                </Button>
-                <Button
-                  onClick={() => navigate(ROUTES.PRODUCTS)}
-                  variant="outline"
-                  className="font-semibold py-6 px-8 rounded-lg text-lg"
-                >
-                  Browse Products
-                </Button>
-              </div>
-            </div>
-
-            {/* Hero Image Placeholder */}
-            <div className="relative h-96 md:h-full">
-              <div className="absolute inset-0 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-3xl" />
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-64 h-64 rounded-full bg-gradient-to-br from-purple-600 via-pink-600 to-blue-600 opacity-20 blur-3xl animate-float" />
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
+    <div className="min-h-screen bg-background overflow-x-hidden">
+      {/* Cinematic Hero Section */}
+      <CinematicHero />
 
       {/* Features Section */}
       <section className="py-20 md:py-32 bg-muted/30">
