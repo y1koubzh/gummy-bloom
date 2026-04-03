@@ -5,9 +5,10 @@ import ProductCard from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import type { Product } from '@/types';
+import GummyPricingSection from '@/components/ui/pricing-section-4';
 
 export default function Products() {
-  const { t, isRTL } = useLanguage();
+  const { t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>();
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(0);
@@ -23,63 +24,61 @@ export default function Products() {
 
   const handleAddToCart = (product: Product) => {
     console.log('Added to cart:', product);
-    // TODO: Implement cart functionality
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white py-12">
-        <div className="container">
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">{t('products')}</h1>
-          <p className="text-lg opacity-90">
-            Discover our premium collection of personalized gummy supplements
-          </p>
-        </div>
-      </div>
+    <div className="min-h-screen bg-black text-white overflow-x-hidden">
+      {/* Premium Featured Section */}
+      <GummyPricingSection />
 
-      <div className="container py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      {/* Full Catalog Section */}
+      <div className="container py-24 border-t border-neutral-900 bg-neutral-950/50">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl md:text-5xl font-bold mb-4">متجر Gummy Bloom</h2>
+          <p className="text-gray-400 max-w-2xl mx-auto">تصفح مجموعتنا الكاملة من المكملات الغذائية المخصصة</p>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
           {/* Sidebar - Filters */}
           <div className="lg:col-span-1">
-            <div className="bg-card rounded-2xl border border-border p-6 shadow-md sticky top-24">
-              <h3 className="font-bold text-lg mb-6">Categories</h3>
+            <div className="bg-neutral-900/50 rounded-3xl border border-neutral-800 p-8 sticky top-24 backdrop-blur-md">
+              <h3 className="font-bold text-xl mb-8 border-b border-neutral-800 pb-4">التصنيفات</h3>
 
               {/* Search */}
-              <div className="mb-6">
+              <div className="mb-8">
                 <div className="relative">
-                  <Search className="absolute left-3 top-3 text-muted-foreground" size={18} />
+                  <Search className="absolute left-3 top-3 text-neutral-500" size={18} />
                   <input
                     type="text"
                     placeholder={t('search')}
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-neutral-800 bg-black/50 text-white focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
                   />
                 </div>
               </div>
 
               {/* Category Filter */}
-              <div className="space-y-2">
+              <div className="space-y-3">
                 <button
                   onClick={() => setSelectedCategory(undefined)}
-                  className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                  className={`w-full text-right px-6 py-3 rounded-xl transition-all font-medium ${
                     selectedCategory === undefined
-                      ? 'bg-primary text-primary-foreground'
-                      : 'hover:bg-muted'
+                      ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/40'
+                      : 'hover:bg-neutral-800 text-gray-400'
                   }`}
                 >
-                  All Products
+                  جميع المنتجات
                 </button>
 
                 {categories?.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
-                    className={`w-full text-left px-4 py-2 rounded-lg transition-colors ${
+                    className={`w-full text-right px-6 py-3 rounded-xl transition-all font-medium ${
                       selectedCategory === category.id
-                        ? 'bg-primary text-primary-foreground'
-                        : 'hover:bg-muted'
+                        ? 'bg-purple-600 text-white shadow-lg shadow-purple-900/40'
+                        : 'hover:bg-neutral-800 text-gray-400'
                     }`}
                   >
                     {category.icon} {category.name}
@@ -92,14 +91,14 @@ export default function Products() {
           {/* Main Content - Products Grid */}
           <div className="lg:col-span-3">
             {productsLoading ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div key={i} className="card-premium h-96 animate-pulse" />
+                  <div key={i} className="h-96 rounded-3xl bg-neutral-900 animate-pulse border border-neutral-800" />
                 ))}
               </div>
             ) : products && products.length > 0 ? (
               <>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
                   {products.map((product) => (
                     <ProductCard
                       key={product.id}
@@ -110,29 +109,31 @@ export default function Products() {
                 </div>
 
                 {/* Pagination */}
-                <div className="flex justify-center gap-4">
+                <div className="flex justify-center items-center gap-6 pt-12 border-t border-neutral-900">
                   <Button
                     onClick={() => setPage(Math.max(0, page - 1))}
                     disabled={page === 0}
                     variant="outline"
+                    className="border-neutral-800 hover:bg-neutral-800 rounded-xl px-8"
                   >
-                    Previous
+                    السابق
                   </Button>
-                  <span className="flex items-center px-4">
-                    Page {page + 1}
+                  <span className="font-bold text-purple-400">
+                    الصفحة {page + 1}
                   </span>
                   <Button
                     onClick={() => setPage(page + 1)}
                     disabled={!products || products.length < 12}
                     variant="outline"
+                    className="border-neutral-800 hover:bg-neutral-800 rounded-xl px-8"
                   >
-                    Next
+                    التالي
                   </Button>
                 </div>
               </>
             ) : (
-              <div className="text-center py-12">
-                <p className="text-lg text-muted-foreground">{t('no_products')}</p>
+              <div className="text-center py-24 bg-neutral-900/30 rounded-3xl border border-dashed border-neutral-800">
+                <p className="text-xl text-gray-500">{t('no_products')}</p>
               </div>
             )}
           </div>
