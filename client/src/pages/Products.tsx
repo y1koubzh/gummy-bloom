@@ -28,10 +28,13 @@ export default function Products() {
 
   return (
     <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      {/* Premium Featured Section */}
-      <GummyPricingSection />
+      {/* Premium Dynamic Products Section */}
+      <GummyPricingSection 
+        products={products as any || []} 
+        onAddToCart={handleAddToCart}
+      />
 
-      {/* Full Catalog Section */}
+      {/* Full Catalog Section with Filters */}
       <div className="container py-24 border-t border-neutral-900 bg-neutral-950/50">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">متجر Gummy Bloom</h2>
@@ -71,7 +74,7 @@ export default function Products() {
                   جميع المنتجات
                 </button>
 
-                {categories?.map((category) => (
+                {categories?.map((category: any) => (
                   <button
                     key={category.id}
                     onClick={() => setSelectedCategory(category.id)}
@@ -99,7 +102,7 @@ export default function Products() {
             ) : products && products.length > 0 ? (
               <>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                  {products.map((product) => (
+                  {products.map((product: any) => (
                     <ProductCard
                       key={product.id}
                       product={product}
