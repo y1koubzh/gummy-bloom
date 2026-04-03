@@ -6,12 +6,18 @@ import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import type { Product } from '@/types';
 import GummyPricingSection from '@/components/ui/pricing-section-4';
+import { toast } from 'sonner';
+import { useCart } from '@/contexts/CartContext';
 
 export default function Products() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<number | undefined>();
   const [searchQuery, setSearchQuery] = useState('');
   const [page, setPage] = useState(0);
+  const isArabic = language === 'ar';
+  
+  const { addToCart } = useCart();
+  const utils = trpc.useUtils();
 
   const { data: products, isLoading: productsLoading } = trpc.products.list.useQuery({
     limit: 12,
@@ -23,7 +29,7 @@ export default function Products() {
   const { data: categories } = trpc.products.categories.useQuery();
 
   const handleAddToCart = (product: Product) => {
-    console.log('Added to cart:', product);
+    addToCart(product);
   };
 
   return (
