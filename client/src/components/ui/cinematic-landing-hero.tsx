@@ -4,6 +4,8 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { cn } from "@/lib/utils";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { GetStartedButton } from "@/components/ui/get-started-button";
 
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -193,7 +195,7 @@ export function CinematicHero({
   className, 
   ...props 
 }: CinematicHeroProps) {
-  
+  const { language } = useLanguage();
   const containerRef = useRef<HTMLDivElement>(null);
   const mainCardRef = useRef<HTMLDivElement>(null);
   const mockupRef = useRef<HTMLDivElement>(null);
@@ -329,17 +331,12 @@ export function CinematicHero({
           {ctaDescription}
         </p>
         <div className="flex flex-col sm:flex-row gap-6">
-          <a href="/builder" className="btn-modern-light flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-            <div className="text-left">
-              <div className="text-[10px] font-bold tracking-wider text-neutral-500 uppercase mb-[-2px]">Start Building Your</div>
-              <div className="text-xl font-bold leading-none tracking-tight">Custom Gummy</div>
-            </div>
-          </a>
-          <a href="/products" className="btn-modern-dark flex items-center justify-center gap-3 px-8 py-4 rounded-[1.25rem] group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-background">
-            <div className="text-left">
-              <div className="text-[10px] font-bold tracking-wider text-neutral-400 uppercase mb-[-2px]">Browse Our</div>
-              <div className="text-xl font-bold leading-none tracking-tight">Shop</div>
-            </div>
+          <GetStartedButton 
+            onClick={() => window.location.href = '/builder'}
+            className="btn-modern-light !bg-white !text-black shadow-2xl"
+          />
+          <a href="/products" className="btn-modern-dark flex items-center justify-center gap-3 px-10 py-4 rounded-xl group focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-background font-bold text-lg">
+            {language === 'ar' ? 'تصفح المتجر' : 'Browse Shop'}
           </a>
         </div>
       </div>
