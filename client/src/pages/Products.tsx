@@ -5,7 +5,6 @@ import ProductCard from '@/components/ProductCard';
 import { Button } from '@/components/ui/button';
 import { Search } from 'lucide-react';
 import type { Product } from '@/types';
-import GummyPricingSection from '@/components/ui/pricing-section-4';
 import { toast } from 'sonner';
 import { useCart } from '@/contexts/CartContext';
 
@@ -33,15 +32,9 @@ export default function Products() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-x-hidden">
-      {/* Premium Dynamic Products Section */}
-      <GummyPricingSection 
-        products={products as any || []} 
-        onAddToCart={handleAddToCart}
-      />
-
+    <div className="min-h-screen bg-black text-white overflow-x-hidden pt-20">
       {/* Full Catalog Section with Filters */}
-      <div className="container py-24 border-t border-neutral-900 bg-neutral-950/50">
+      <div className="container py-24 bg-neutral-950/50">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-5xl font-bold mb-4">متجر Gummy Bloom</h2>
           <p className="text-gray-400 max-w-2xl mx-auto">تصفح مجموعتنا الكاملة من المكملات الغذائية المخصصة</p>
