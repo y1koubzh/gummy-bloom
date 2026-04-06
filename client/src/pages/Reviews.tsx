@@ -105,10 +105,10 @@ export default function Reviews() {
               transition={{ delay: index * 0.1, duration: 0.5 }}
               className="break-inside-avoid"
             >
-              <div className="relative p-8 rounded-[2.5rem] bg-neutral-900/40 border border-white/5 backdrop-blur-xl group hover:bg-neutral-900/60 transition-all duration-500 hover:border-purple-500/30 shadow-2xl">
+              <div className="relative p-8 rounded-[2.5rem] bg-neutral-900/40 border border-white/5 backdrop-blur-xl group hover:bg-neutral-900/60 transition-all duration-500 hover:border-purple-500/30 shadow-2xl overflow-hidden">
                 {/* Decoration */}
                 <div 
-                  className="absolute -top-10 -right-10 w-24 h-24 blur-[60px] opacity-20 pointer-events-none group-hover:opacity-40 transition-opacity" 
+                  className="absolute -top-12 -right-12 w-32 h-32 blur-[80px] opacity-10 pointer-events-none group-hover:opacity-30 transition-opacity" 
                   style={{ backgroundColor: review.color }}
                 />
                 
