@@ -242,7 +242,7 @@ export function GlowyWavesHero() {
             className="mb-16 flex flex-col items-center justify-center gap-6 sm:flex-row"
           >
             <GetStartedButton 
-              onClick={() => window.location.href = '/builder'}
+              onClick={() => window.location.href = '/products'}
             />
             <Button
               size="lg"
