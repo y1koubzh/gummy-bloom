@@ -68,7 +68,7 @@ const translations: Record<Language, Record<string, string>> = {
     'add_to_cart': 'أضف إلى السلة',
     'price': 'السعر',
     'rating': 'التقييم',
-    'reviews': 'التقييمات',
+    'reviews': 'آراء الزبائن',
     'description': 'الوصف',
     'ingredients': 'المكونات',
     'flavor': 'النكهة',

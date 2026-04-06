@@ -12,6 +12,7 @@ import Products from "./pages/Products";
 import ProductDetail from "./pages/ProductDetail";
 import Builder from "./pages/Builder";
 import Cart from "./pages/Cart";
+import Reviews from "./pages/Reviews";
 import Account from "./pages/Account";
 import Admin from "./pages/Admin";
 
@@ -24,6 +25,7 @@ function Router() {
         <Route path={"/products/:slug"} component={ProductDetail} />
         <Route path={"/builder"} component={Builder} />
         <Route path={"/cart"} component={Cart} />
+        <Route path={"/reviews"} component={Reviews} />
         <Route path={"/account"} component={Account} />
         <Route path={"/admin"} component={Admin} />
         <Route path={"/404"} component={NotFound} />

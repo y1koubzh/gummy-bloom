@@ -97,45 +97,6 @@ export default function Home() {
           </div>
         </div>
       </section>
-
-      {/* Testimonials Section */}
-      <section className="py-24 md:py-40 bg-neutral-950/50 border-t border-white/5">
-        <div className="container px-6">
-          <div className="text-center mb-24">
-            <h2 className="text-4xl md:text-6xl font-black mb-6 bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
-              {isArabic ? 'أحبنا زبائننا' : 'Loved by Our Customers'}
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {[1, 2, 3].map((i) => (
-              <div
-                key={i}
-                className="bg-neutral-900/30 rounded-[2.5rem] border border-white/5 p-10 backdrop-blur-md hover:bg-neutral-900/50 transition-all duration-500"
-                dir={isArabic ? 'rtl' : 'ltr'}
-              >
-                <div className="flex items-center gap-1 mb-6">
-                  {Array.from({ length: 5 }).map((_, j) => (
-                    <span key={j} className="text-purple-500 text-xl">★</span>
-                  ))}
-                </div>
-                <p className="text-gray-300 mb-8 text-lg font-light leading-relaxed">
-                  {isArabic 
-                    ? '"لقد غيرت Gummy Bloom روتين المكملات الغذائية الخاص بي. القدرة على التخصيص مذهلة حقاً!"'
-                    : '"Gummy Bloom has transformed my supplement routine. The ability to customize my blend is amazing!"'}
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-purple-500 to-pink-500" />
-                  <div>
-                    <p className="font-bold text-lg">{isArabic ? 'زبون' : 'Customer'} {i}</p>
-                    <p className="text-sm text-gray-500">{isArabic ? 'مشتري مؤكد' : 'Verified Buyer'}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
