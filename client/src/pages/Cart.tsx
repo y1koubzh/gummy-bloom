@@ -1,172 +1,219 @@
 import { useState } from 'react';
 import { useLanguage } from '@/contexts/LanguageContext';
-import { trpc } from '@/lib/trpc';
+import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Trash2, Plus, Minus } from 'lucide-react';
+import { ShoppingCart, Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { formatCurrency } from '@shared/utils';
 import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST, TAX_RATE } from '@shared/constants';
+import { useLocation } from 'wouter';
+import { toast } from 'sonner';
 
 export default function Cart() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [, navigate] = useLocation();
+  const { items, updateQuantity, removeFromCart, subtotal, clearCart } = useCart();
   const [discountCode, setDiscountCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const isArabic = language === 'ar';
 
-  // Fetch cart items
-  const { data: cartItems = [], isLoading } = trpc.cart.getItems.useQuery();
-
-  // Calculate totals
-  const subtotal = cartItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-  const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
+  const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_COST;
   const beforeTax = subtotal - appliedDiscount + shippingCost;
   const tax = Math.round(beforeTax * TAX_RATE);
   const total = beforeTax + tax;
 
   const handleApplyDiscount = () => {
-    // TODO: Validate discount code with backend
-    setAppliedDiscount(Math.round(subtotal * 0.1)); // 10% discount for demo
+    if (discountCode.toUpperCase() === 'GUMMY10') {
+      setAppliedDiscount(Math.round(subtotal * 0.1));
+      toast.success(isArabic ? 'تم تطبيق الخصم بنجاح!' : 'Discount applied successfully!');
+    } else {
+      toast.error(isArabic ? 'كود الخصم غير صحيح' : 'Invalid discount code');
+    }
   };
 
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-background">
-        <div className="container py-12">
-          <div className="text-center">
-            <div className="inline-block animate-spin">
-              <ShoppingCart size={48} className="text-primary" />
-            </div>
-            <p className="mt-4 text-lg text-muted-foreground">{t('loading')}</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
+  const handleCheckout = () => {
+    toast.success(isArabic ? 'جاري تحويلك لصفحة الدفع...' : 'Redirecting to checkout...');
+    // In a real app, integrate with payment gateway here
+  };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black text-white pt-24 pb-12">
       {/* Header */}
-      <div className="bg-gradient-to-r from-purple-600 via-pink-600 to-blue-600 text-white py-12">
-        <div className="container">
-          <div className="flex items-center gap-3 mb-2">
-            <ShoppingCart size={32} />
-            <h1 className="text-4xl font-bold">{t('cart')}</h1>
+      <div className="relative py-16 mb-12 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-purple-900/40 via-pink-900/40 to-blue-900/40 blur-3xl opacity-50" />
+        <div className="container relative z-10 px-6">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/10">
+              <ShoppingCart size={32} className="text-purple-400" />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black bg-gradient-to-b from-white to-white/60 bg-clip-text text-transparent">
+              {isArabic ? 'سلة المشتريات' : 'Your Shopping Cart'}
+            </h1>
           </div>
-          <p className="text-lg opacity-90">
-            {cartItems.length} {cartItems.length === 1 ? 'item' : 'items'} in your cart
+          <p className="text-xl text-gray-400 font-light">
+            {items.length} {isArabic ? 'منتجات في سلتك' : (items.length === 1 ? 'item' : 'items') + ' in your cart'}
           </p>
         </div>
       </div>
 
-      <div className="container py-12">
-        {cartItems.length === 0 ? (
-          <div className="text-center py-12">
-            <ShoppingCart size={64} className="mx-auto text-muted-foreground mb-4 opacity-50" />
-            <p className="text-lg text-muted-foreground mb-6">{t('empty_cart')}</p>
-            <Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white">
-              {t('continue_shopping')}
+      <div className="container px-6">
+        {items.length === 0 ? (
+          <div className="text-center py-24 bg-neutral-900/30 rounded-[3rem] border border-white/5 backdrop-blur-sm">
+            <ShoppingBag size={80} className="mx-auto text-neutral-800 mb-8" />
+            <h2 className="text-3xl font-bold mb-4">{isArabic ? 'سلتك فارغة حالياً' : 'Your cart is empty'}</h2>
+            <p className="text-gray-500 mb-10 max-w-sm mx-auto">
+              {isArabic ? 'يبدو أنك لم تضف أي منتجات بعد. ابدأ بالتسوق الآن واكتشف منتجاتنا الرائعة.' : 'Looks like you haven\'t added anything yet. Start exploring our premium gummies.'}
+            </p>
+            <Button 
+              onClick={() => navigate('/products')}
+              className="bg-white text-black hover:bg-neutral-200 px-10 py-7 rounded-2xl text-lg font-black transition-all active:scale-95"
+            >
+              {isArabic ? 'ابدأ التسوق' : 'Start Shopping'}
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Cart Items */}
-            <div className="lg:col-span-2 space-y-4">
-              {cartItems.map((item) => (
+            <div className="lg:col-span-2 space-y-6">
+              {items.map((item) => (
                 <div
                   key={item.id}
-                  className="bg-card rounded-2xl border border-border p-6 flex items-center justify-between"
+                  className="group relative bg-neutral-900/40 rounded-[2.5rem] border border-white/5 p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 backdrop-blur-xl hover:bg-neutral-900/60 transition-all duration-300"
                 >
-                  <div className="flex-1">
-                    <h3 className="font-bold text-lg mb-2">Product {item.id}</h3>
-                    <p className="text-muted-foreground mb-3">
-                      {formatCurrency(item.price)} each
+                  {/* Product Image Placeholder */}
+                  <div className="w-32 h-32 rounded-3xl bg-neutral-800 flex items-center justify-center border border-white/5 overflow-hidden">
+                    {item.image ? (
+                        <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+                    ) : (
+                        <div className="w-16 h-16 rounded-full" style={{ backgroundColor: item.color || '#8B5CF6' }} />
+                    )}
+                  </div>
+
+                  <div className="flex-1 text-center md:text-left" dir={isArabic ? 'rtl' : 'ltr'}>
+                    <h3 className="text-2xl font-bold mb-2">{item.name}</h3>
+                    <p className="text-purple-400 font-bold mb-6">
+                      {formatCurrency(item.price)} {isArabic ? '' : 'each'}
                     </p>
-                    <div className="flex items-center gap-2">
-                      <Button variant="outline" size="sm">
-                        <Minus size={16} />
-                      </Button>
-                      <span className="w-8 text-center font-semibold">{item.quantity}</span>
-                      <Button variant="outline" size="sm">
-                        <Plus size={16} />
-                      </Button>
+                    
+                    <div className="flex items-center justify-center md:justify-start gap-4">
+                      <button 
+                        onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                        className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"
+                      >
+                        <Minus size={18} />
+                      </button>
+                      <span className="w-12 text-center text-xl font-bold">{item.quantity}</span>
+                      <button 
+                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                         className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center hover:bg-white/10 transition-colors border border-white/10"
+                      >
+                        <Plus size={18} />
+                      </button>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-2xl font-bold text-primary mb-3">
+
+                  <div className="text-center md:text-right flex flex-col items-center md:items-end justify-between self-stretch">
+                    <button 
+                        onClick={() => removeFromCart(item.id)}
+                        className="p-3 text-red-500/50 hover:text-red-500 transition-colors group-hover:scale-110"
+                    >
+                      <Trash2 size={24} />
+                    </button>
+                    <p className="text-3xl font-black text-white mt-4">
                       {formatCurrency(item.price * item.quantity)}
                     </p>
-                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600">
-                      <Trash2 size={18} />
-                    </Button>
                   </div>
                 </div>
               ))}
+
+              <div className="flex justify-between items-center py-6">
+                <Button 
+                    variant="ghost" 
+                    onClick={() => navigate('/products')}
+                    className="text-gray-400 hover:text-white"
+                >
+                    <ShoppingBag className="mr-2 h-4 w-4" />
+                    {isArabic ? 'متابعة التسوق' : 'Continue Shopping'}
+                </Button>
+                <Button 
+                    variant="ghost" 
+                    onClick={clearCart}
+                    className="text-red-500/50 hover:text-red-500"
+                >
+                    {isArabic ? 'تفريغ السلة' : 'Clear Cart'}
+                </Button>
+              </div>
             </div>
 
             {/* Order Summary */}
             <div className="lg:col-span-1">
-              <div className="bg-card rounded-2xl border border-border p-6 sticky top-24">
-                <h3 className="font-bold text-lg mb-6">Order Summary</h3>
+              <div className="bg-neutral-900/60 rounded-[3rem] border border-white/10 p-10 sticky top-32 backdrop-blur-2xl shadow-2xl">
+                <h3 className="text-2xl font-bold mb-8">{isArabic ? 'ملخص الطلب' : 'Order Summary'}</h3>
 
-                <div className="space-y-4 mb-6 pb-6 border-b border-border">
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Subtotal</span>
-                    <span className="font-semibold">{formatCurrency(subtotal)}</span>
+                <div className="space-y-6 mb-8 pb-8 border-b border-white/5">
+                  <div className="flex justify-between text-lg">
+                    <span className="text-gray-400">{isArabic ? 'المجموع الفرعي' : 'Subtotal'}</span>
+                    <span className="font-bold">{formatCurrency(subtotal)}</span>
                   </div>
 
                   {appliedDiscount > 0 && (
-                    <div className="flex justify-between text-green-600">
-                      <span>Discount</span>
-                      <span className="font-semibold">-{formatCurrency(appliedDiscount)}</span>
+                    <div className="flex justify-between text-lg text-green-500">
+                      <span>{isArabic ? 'الخصم' : 'Discount'}</span>
+                      <span className="font-bold">-{formatCurrency(appliedDiscount)}</span>
                     </div>
                   )}
 
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Shipping</span>
-                    <span className="font-semibold">
-                      {shippingCost === 0 ? 'FREE' : formatCurrency(shippingCost)}
+                  <div className="flex justify-between text-lg">
+                    <span className="text-gray-400">{isArabic ? 'الشحن' : 'Shipping'}</span>
+                    <span className="font-bold">
+                      {shippingCost === 0 ? (isArabic ? 'مجاني' : 'FREE') : formatCurrency(shippingCost)}
                     </span>
                   </div>
 
-                  <div className="flex justify-between">
-                    <span className="text-muted-foreground">Tax</span>
-                    <span className="font-semibold">{formatCurrency(tax)}</span>
+                  <div className="flex justify-between text-lg">
+                    <span className="text-gray-400">{isArabic ? 'الضريبة' : 'Tax'}</span>
+                    <span className="font-bold">{formatCurrency(tax)}</span>
                   </div>
                 </div>
 
-                <div className="flex justify-between mb-6">
-                  <span className="font-bold text-lg">Total</span>
-                  <span className="font-bold text-2xl text-primary">{formatCurrency(total)}</span>
+                <div className="flex justify-between items-end mb-10">
+                  <span className="text-xl font-bold">{isArabic ? 'الإجمالي القابل للدفع' : 'Total Payable'}</span>
+                  <div className="text-right">
+                    <span className="block text-4xl font-black text-purple-400">{formatCurrency(total)}</span>
+                    <span className="text-xs text-gray-500">DZD (incl. all taxes)</span>
+                  </div>
                 </div>
 
                 {/* Discount Code */}
-                <div className="mb-6 space-y-2">
-                  <label className="text-sm font-semibold">Discount Code</label>
-                  <div className="flex gap-2">
+                <div className="mb-10">
+                  <div className="flex gap-3">
                     <input
                       type="text"
-                      placeholder="Enter code"
+                      placeholder={isArabic ? "كود الخصم" : "Discount code"}
                       value={discountCode}
                       onChange={(e) => setDiscountCode(e.target.value)}
-                      className="flex-1 px-3 py-2 rounded-lg border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary text-sm"
+                      className="flex-1 px-5 py-4 rounded-2xl border border-white/5 bg-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
                     />
-                    <Button
+                    <button
                       onClick={handleApplyDiscount}
-                      variant="outline"
-                      size="sm"
-                      className="whitespace-nowrap"
+                      className="px-6 py-4 bg-white/10 rounded-2xl font-bold hover:bg-white/20 transition-all active:scale-95 border border-white/10"
                     >
-                      Apply
-                    </Button>
+                      {isArabic ? 'تطبيق' : 'Apply'}
+                    </button>
                   </div>
                 </div>
 
                 {/* Checkout Button */}
-                <Button className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold py-3 rounded-lg">
-                  Proceed to Checkout
+                <Button 
+                    onClick={handleCheckout}
+                    className="w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:scale-[1.02] active:scale-95 text-white font-black py-8 rounded-2xl text-xl shadow-[0_20px_40px_-10px_rgba(147,51,234,0.3)] transition-all"
+                >
+                  {isArabic ? 'إتمام الشراء' : 'Proceed to Checkout'}
+                  <ArrowRight className={`ml-2 h-5 w-5 ${isArabic ? 'rotate-180 mr-2 ml-0' : ''}`} />
                 </Button>
-
-                <Button variant="outline" className="w-full mt-3">
-                  Continue Shopping
-                </Button>
+                
+                <p className="text-center text-xs text-gray-500 mt-6 px-4">
+                    {isArabic ? 'بالنقر على إتمام الشراء، فإنك توافق على شروط الخدمة الخاصة بنا.' : 'By proceeding to checkout, you agree to our Terms of Service.'}
+                </p>
               </div>
             </div>
           </div>

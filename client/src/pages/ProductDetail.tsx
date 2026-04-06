@@ -5,12 +5,14 @@ import { Button } from '@/components/ui/button';
 import { Star, ShoppingCart, Heart, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
 import { formatCurrency } from '@shared/utils';
 import { useState } from 'react';
+import { useCart } from '@/contexts/CartContext';
 
 export default function ProductDetail() {
   const [, params] = useRoute('/products/:slug');
   const slug = params?.slug;
   const { t, isRTL } = useLanguage();
   const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCart();
 
   const { data: product, isLoading } = trpc.products.getBySlug.useQuery({ slug: slug || '' }, {
     enabled: !!slug,
@@ -34,8 +36,7 @@ export default function ProductDetail() {
   }
 
   const handleAddToCart = () => {
-    console.log('Added to cart:', product, 'Quantity:', quantity);
-    // TODO: Implement cart functionality
+    addToCart(product as any, quantity);
   };
 
   const displayPrice = product.discountPrice || product.price;

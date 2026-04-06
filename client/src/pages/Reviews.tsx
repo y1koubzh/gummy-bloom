@@ -1,6 +1,7 @@
 import { useLanguage } from '@/contexts/LanguageContext';
 import { motion } from 'framer-motion';
 import { Star, Quote, MessageSquareQuote } from 'lucide-react';
+import { toast } from 'sonner';
 
 const REVIEWS = [
   {
@@ -62,6 +63,14 @@ const REVIEWS = [
 export default function Reviews() {
   const { language } = useLanguage();
   const isArabic = language === 'ar';
+
+  const handleAction = (type: 'submit' | 'contact') => {
+    if (type === 'submit') {
+      toast.info(isArabic ? 'شكراً لاهتمامك! سيتم فتح نموذج التقييم قريباً.' : 'Thank you! The review form will be available soon.');
+    } else {
+      toast.success(isArabic ? 'جاري تحويلك لمركز الدعم الفني...' : 'Redirecting to support center...');
+    }
+  };
 
   return (
     <div className="min-h-screen bg-black text-white pt-32 pb-20 overflow-x-hidden">
@@ -153,10 +162,16 @@ export default function Reviews() {
                         : "We are proud of every success you achieve. Contact us to share your story."}
                 </p>
                 <div className="flex flex-wrap justify-center gap-4">
-                    <button className="px-6 py-3 bg-white text-black font-bold rounded-xl hover:bg-neutral-200 transition-colors">
+                    <button 
+                      onClick={() => handleAction('submit')}
+                      className="px-6 py-3 bg-white text-black font-bold rounded-xl hover:bg-neutral-200 transition-all active:scale-95 shadow-lg shadow-white/5"
+                    >
                         {isArabic ? "أرسل مراجعة" : "Submit Review"}
                     </button>
-                    <button className="px-6 py-3 bg-neutral-800 text-white font-bold rounded-xl hover:bg-neutral-700 transition-colors border border-white/5">
+                    <button 
+                      onClick={() => handleAction('contact')}
+                      className="px-6 py-3 bg-neutral-800 text-white font-bold rounded-xl hover:bg-neutral-700 transition-all active:scale-95 border border-white/5"
+                    >
                         {isArabic ? "تواصل معنا" : "Contact Us"}
                     </button>
                 </div>

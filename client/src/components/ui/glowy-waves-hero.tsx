@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { GetStartedButton } from "@/components/ui/get-started-button";
+import { useLocation } from "wouter";
 
 type Point = {
   x: number;
@@ -42,6 +43,7 @@ export function GlowyWavesHero() {
   const mouseRef = useRef<Point>({ x: 0, y: 0 });
   const targetMouseRef = useRef<Point>({ x: 0, y: 0 });
   const { language } = useLanguage();
+  const [, navigate] = useLocation();
   const isArabic = language === 'ar';
 
   useEffect(() => {
@@ -242,12 +244,12 @@ export function GlowyWavesHero() {
             className="mb-16 flex flex-col items-center justify-center gap-6 sm:flex-row"
           >
             <GetStartedButton 
-              onClick={() => window.location.href = '/products'}
+              onClick={() => navigate('/products')}
             />
             <Button
               size="lg"
               variant="outline"
-              onClick={() => window.location.href = '/products'}
+              onClick={() => navigate('/products')}
               className="rounded-xl border-white/10 bg-white/5 px-10 py-7 text-lg font-bold text-white backdrop-blur-md transition-all hover:bg-white/10"
             >
               {isArabic ? "تصفح المتجر" : "Explore Shop"}

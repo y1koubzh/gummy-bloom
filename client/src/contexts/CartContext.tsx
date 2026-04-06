@@ -15,7 +15,7 @@ interface CartItem {
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product) => void;
+  addToCart: (product: Product, qty?: number) => void;
   removeFromCart: (id: number) => void;
   updateQuantity: (id: number, quantity: number) => void;
   clearCart: () => void;
@@ -46,13 +46,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('gummy_bloom_cart', JSON.stringify(items));
   }, [items]);
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Product, qty: number = 1) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.productId === product.id);
       if (existing) {
-        toast.info(isArabic ? 'تم زيادة كمية المنتج في السلة' : 'Increased product quantity in cart');
+        toast.info(isArabic ? `تمت إضافة ${qty} من المنتج إلى السلة` : `Added ${qty} more items to cart`);
         return prev.map((i) =>
-          i.productId === product.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.productId === product.id ? { ...i, quantity: i.quantity + qty } : i
         );
       }
       
@@ -64,7 +64,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
           productId: product.id,
           name: product.name,
           price: product.discountPrice || product.price,
-          quantity: 1,
+          quantity: qty,
           image: product.image,
           color: product.color,
         },
