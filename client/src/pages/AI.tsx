@@ -3,6 +3,7 @@ import { useLanguage } from '@/contexts/LanguageContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Send, Sparkles, User, Loader2, RefreshCw, Zap, ShieldCheck, Heart } from 'lucide-react';
 import { toast } from 'sonner';
+import { BackgroundPaths } from '@/components/ui/background-paths';
 
 interface Message {
   id: string;
@@ -102,14 +103,9 @@ export default function AI() {
 
   return (
     <div className="min-h-screen bg-black text-white pt-24 overflow-hidden flex flex-col">
-      {/* Immersive Background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <div className="absolute top-[10%] left-[20%] w-[40%] h-[40%] bg-purple-600/5 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute bottom-[10%] right-[20%] w-[30%] h-[30%] bg-blue-600/5 blur-[100px] rounded-full delay-1000 animate-pulse" />
-      </div>
-
-      <div className="container flex-1 max-w-5xl mx-auto flex flex-col relative z-10 px-6 pb-6 h-[calc(100vh-100px)]">
-        {/* Header Area */}
+      <BackgroundPaths title="">
+        <div className="container h-[calc(100vh-120px)] max-w-5xl mx-auto flex flex-col relative z-10 px-6 pb-6">
+          {/* Header Area */}
         <header className="flex items-center justify-between py-6 border-b border-white/5 mb-8">
             <div className="flex items-center gap-4">
                 <div className="p-3 bg-gradient-to-br from-purple-600 to-pink-600 rounded-2xl shadow-[0_0_30px_-5px_rgba(147,51,234,0.4)]">
@@ -223,6 +219,7 @@ export default function AI() {
             </div>
         </div>
       </div>
-    </div>
-  );
+    </BackgroundPaths>
+  </div>
+);
 }
