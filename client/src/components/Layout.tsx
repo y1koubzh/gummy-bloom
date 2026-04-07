@@ -1,5 +1,4 @@
 import Header from './Header';
-import AIChatbot from './AIChatbot';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,7 +11,6 @@ export default function Layout({ children }: LayoutProps) {
       <main className="flex-1">
         {children}
       </main>
-      <AIChatbot />
       {/* Footer can be added here later */}
     </div>
   );

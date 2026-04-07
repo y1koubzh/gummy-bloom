@@ -20,6 +20,7 @@ export default function Header() {
     { label: t('products'), href: ROUTES.PRODUCTS },
     { label: t('builder'), href: ROUTES.BUILDER },
     { label: t('reviews'), href: '/reviews' },
+    { label: t('ai'), href: '/ai' },
   ];
 
   return (
