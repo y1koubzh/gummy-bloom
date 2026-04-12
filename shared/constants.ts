@@ -118,6 +118,9 @@ export const SITE_LOGO_PATH = '/logo.png';
 /** إذا كان شعارك يتضمّن الاسم بالكامل، اجعلها `false` لإخفاء النص بجانب الصورة */
 export const SHOW_SITE_NAME_NEXT_TO_LOGO = true;
 
+// ============ CONTACT ============
+export const CONTACT_WHATSAPP = '+213771214259'; // رقم الواتساب الخاص بك
+
 // ============ VALIDATION ============
 export const VALIDATION = {
   EMAIL_REGEX: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,

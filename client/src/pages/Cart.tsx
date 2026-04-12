@@ -4,7 +4,7 @@ import { useCart } from '@/contexts/CartContext';
 import { Button } from '@/components/ui/button';
 import { ShoppingCart, Trash2, Plus, Minus, ArrowRight, ShoppingBag } from 'lucide-react';
 import { formatCurrency } from '@shared/utils';
-import { FREE_SHIPPING_THRESHOLD, SHIPPING_COST, TAX_RATE } from '@shared/constants';
+import { CONTACT_WHATSAPP, FREE_SHIPPING_THRESHOLD, SHIPPING_COST, TAX_RATE } from '@shared/constants';
 import { useLocation } from 'wouter';
 import { toast } from 'sonner';
 
@@ -12,27 +12,42 @@ export default function Cart() {
   const { t, language } = useLanguage();
   const [, navigate] = useLocation();
   const { items, updateQuantity, removeFromCart, subtotal, clearCart } = useCart();
-  const [discountCode, setDiscountCode] = useState('');
-  const [appliedDiscount, setAppliedDiscount] = useState(0);
   const isArabic = language === 'ar';
 
   const shippingCost = subtotal >= FREE_SHIPPING_THRESHOLD || subtotal === 0 ? 0 : SHIPPING_COST;
-  const beforeTax = subtotal - appliedDiscount + shippingCost;
-  const tax = Math.round(beforeTax * TAX_RATE);
-  const total = beforeTax + tax;
-
-  const handleApplyDiscount = () => {
-    if (discountCode.toUpperCase() === 'GUMMY10') {
-      setAppliedDiscount(Math.round(subtotal * 0.1));
-      toast.success(isArabic ? 'تم تطبيق الخصم بنجاح!' : 'Discount applied successfully!');
-    } else {
-      toast.error(isArabic ? 'كود الخصم غير صحيح' : 'Invalid discount code');
-    }
-  };
+  const tax = Math.round(subtotal * TAX_RATE);
+  const total = subtotal + shippingCost + tax;
 
   const handleCheckout = () => {
-    toast.success(isArabic ? 'جاري تحويلك لصفحة الدفع...' : 'Redirecting to checkout...');
-    // In a real app, integrate with payment gateway here
+    if (items.length === 0) return;
+
+    const message = isArabic 
+      ? `طلب جديد من Gummy Bloom 🌸\n\n` +
+        `قائمة المنتجات:\n` +
+        items.map(item => `- ${item.name} (الكمية: ${item.quantity}) - ${formatCurrency(item.price * item.quantity)}`).join('\n') +
+        `\n\n------------------\n` +
+        `المجموع الفرعي: ${formatCurrency(subtotal)}\n` +
+        `الشحن: ${shippingCost === 0 ? 'مجاني' : formatCurrency(shippingCost)}\n` +
+        `الإجمالي: ${formatCurrency(total)}\n` +
+        `------------------\n\n` +
+        `أريد إتمام هذا الطلب من فضلك.`
+      : `New Order from Gummy Bloom 🌸\n\n` +
+        `Product List:\n` +
+        items.map(item => `- ${item.name} (Qty: ${item.quantity}) - ${formatCurrency(item.price * item.quantity)}`).join('\n') +
+        `\n\n------------------\n` +
+        `Subtotal: ${formatCurrency(subtotal)}\n` +
+        `Shipping: ${shippingCost === 0 ? 'Free' : formatCurrency(shippingCost)}\n` +
+        `Total: ${formatCurrency(total)}\n` +
+        `------------------\n\n` +
+        `I would like to complete this order please.`;
+
+    const whatsappUrl = `https://wa.me/${CONTACT_WHATSAPP.replace('+', '')}?text=${encodeURIComponent(message)}`;
+    
+    toast.success(isArabic ? 'جاري تحويلك إلى واتساب...' : 'Redirecting to WhatsApp...');
+    
+    setTimeout(() => {
+      window.open(whatsappUrl, '_blank');
+    }, 1500);
   };
 
   return (
@@ -155,12 +170,7 @@ export default function Cart() {
                     <span className="font-bold">{formatCurrency(subtotal)}</span>
                   </div>
 
-                  {appliedDiscount > 0 && (
-                    <div className="flex justify-between text-lg text-green-500">
-                      <span>{isArabic ? 'الخصم' : 'Discount'}</span>
-                      <span className="font-bold">-{formatCurrency(appliedDiscount)}</span>
-                    </div>
-                  )}
+
 
                   <div className="flex justify-between text-lg">
                     <span className="text-gray-400">{isArabic ? 'الشحن' : 'Shipping'}</span>
@@ -183,24 +193,7 @@ export default function Cart() {
                   </div>
                 </div>
 
-                {/* Discount Code */}
-                <div className="mb-10">
-                  <div className="flex gap-3">
-                    <input
-                      type="text"
-                      placeholder={isArabic ? "كود الخصم" : "Discount code"}
-                      value={discountCode}
-                      onChange={(e) => setDiscountCode(e.target.value)}
-                      className="flex-1 px-5 py-4 rounded-2xl border border-white/5 bg-white/5 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all"
-                    />
-                    <button
-                      onClick={handleApplyDiscount}
-                      className="px-6 py-4 bg-white/10 rounded-2xl font-bold hover:bg-white/20 transition-all active:scale-95 border border-white/10"
-                    >
-                      {isArabic ? 'تطبيق' : 'Apply'}
-                    </button>
-                  </div>
-                </div>
+
 
                 {/* Checkout Button */}
                 <Button 

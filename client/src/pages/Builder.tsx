@@ -6,6 +6,8 @@ import { formatCurrency, calculateOrderTotal } from '@shared/utils';
 import { DEFAULT_FLAVORS, DEFAULT_PACKAGING, BASE_GUMMY_PRICE } from '@shared/constants';
 import GummyPreview from '@/components/GummyPreview';
 import { motion } from 'framer-motion';
+import { useCart } from '@/contexts/CartContext';
+import { useLocation } from 'wouter';
 
 export interface SelectedIngredient {
   name: string;
@@ -14,13 +16,36 @@ export interface SelectedIngredient {
 }
 
 export default function Builder() {
-  const { t, isRTL } = useLanguage();
+  const { t, isRTL, language } = useLanguage();
+  const [, navigate] = useLocation();
+  const { addToCart } = useCart();
   const [currentStep, setCurrentStep] = useState<BuilderStep>('flavor');
   const [selectedFlavor, setSelectedFlavor] = useState<number>(1);
   const [selectedIngredients, setSelectedIngredients] = useState<SelectedIngredient[]>([]);
   const [selectedPackaging, setSelectedPackaging] = useState<number>(1);
   const [selectedDosage, setSelectedDosage] = useState<number>(1);
   const [formulaName, setFormulaName] = useState('');
+  const isArabic = language === 'ar';
+
+  const handleAddToCart = () => {
+    const pkg = DEFAULT_PACKAGING.find(p => p.id === selectedPackaging) || DEFAULT_PACKAGING[0];
+    
+    const customProduct = {
+      id: Date.now(), // Unique ID for custom products
+      name: formulaName || (isArabic ? 'تركيبة مخصصة' : 'Custom Formula'),
+      slug: `custom-${Date.now()}`,
+      price: totalPrice,
+      description: `Custom gummy formula with ${currentFlavor.name} flavor.`,
+      image: null,
+      category: 'custom',
+      color: currentFlavor.color,
+      isCustom: true
+    };
+
+    // @ts-ignore - customProduct is slightly different from standard product
+    addToCart(customProduct, 1);
+    navigate('/cart');
+  };
 
   const dosageOptions = [
     { id: 1, label: 'Standard (1x daily)', priceModifier: 0 },
@@ -365,22 +390,25 @@ export default function Builder() {
                   variant="ghost"
                   className="h-16 px-8 rounded-2xl flex items-center gap-3 text-lg font-bold hover:bg-muted"
                 >
-                  <ChevronLeft size={24} />
-                  Back
+                  <ChevronLeft size={24} className={isArabic ? 'rotate-180 ml-2' : 'mr-2'} />
+                  {isArabic ? 'رجوع' : 'Back'}
                 </Button>
 
                 {currentStep === 'review' ? (
-                  <Button className="flex-1 h-16 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white flex items-center justify-center gap-3 text-xl font-black rounded-2xl shadow-xl shadow-purple-500/20 transform transition-transform active:scale-95">
-                    <ShoppingCart size={24} />
-                    Finalize & Add to Cart
+                  <Button 
+                    onClick={handleAddToCart}
+                    className="flex-1 h-16 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white flex items-center justify-center gap-3 text-xl font-black rounded-2xl shadow-xl shadow-purple-500/20 transform transition-transform active:scale-95"
+                  >
+                    <ShoppingCart size={24} className={isArabic ? 'ml-2' : 'mr-2'} />
+                    {isArabic ? 'إتمام الطلب والإضافة للسلة' : 'Finalize & Add to Cart'}
                   </Button>
                 ) : (
                   <Button
                     onClick={handleNextStep}
                     className="flex-1 h-16 bg-primary hover:bg-primary/90 text-white flex items-center justify-center gap-3 text-xl font-black rounded-2xl shadow-xl shadow-primary/20 transform transition-transform active:scale-95"
                   >
-                    Continue to Next Step
-                    <ChevronRight size={24} />
+                    {isArabic ? 'الخطوة التالية' : 'Continue to Next Step'}
+                    <ChevronRight size={24} className={isArabic ? 'rotate-180 mr-2' : 'ml-2'} />
                   </Button>
                 )}
               </div>
